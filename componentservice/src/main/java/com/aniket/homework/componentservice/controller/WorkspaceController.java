@@ -58,14 +58,14 @@ public class WorkspaceController {
     @RequestMapping(value="/{version:[v|V][0-9]+}/workspaces",
             method= RequestMethod.GET)
     public @ResponseBody
-    List<Workspace> getAllWorkspaces(
+    List<WorkspaceResponse> getAllWorkspaces(
             @PathVariable(VERSION) String version) {
 
-        List<Workspace> workspaces;
+        List<WorkspaceResponse> workspaces;
         switch(Version.fromValue(version)){
 
             case V1:
-                workspaces = workspaceService.getAll();
+                workspaces = workspaceService.getAllWorkSpaceAndOwnerGroup();
                 break;
 
             default:

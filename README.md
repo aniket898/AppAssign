@@ -30,7 +30,7 @@ OR Modify the link : http://localhost:8080/componentservice/swagger-ui.html
 ## Create a sample workspace to start with
 1. Workspace Creation API
 ```
-POST /componentservice/v1/workspaces/1 HTTP/1.1
+POST /componentservice/v1/workspaces
 Host: localhost:8080
 Content-Type: application/json
 Accept: application/json

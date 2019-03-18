@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -97,15 +98,33 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     @Override
     public WorkspaceResponse getWorkSpaceAndOwnerGroup(Integer workspaceId) throws ResourceNotExistsException {
         Workspace workspace = get(workspaceId);
+        OwnerGroup ownerGroup = getOwnerGroup(workspace.getOwnerGroupId());
+        return new WorkspaceResponse(workspace.getWorkspaceId(), workspace.getWorkspaceName(),
+                workspace.getEnvironments(), workspace.getSourceRepositories(), ownerGroup);
+    }
+
+    public OwnerGroup getOwnerGroup(String ownerGroupId){
         OwnerGroup ownerGroup = null;
         try {
-            CompletableFuture<OwnerGroup> ownerGroupCompletableFuture = directoryService.getOwnerGroupsById(workspace.getOwnerGroupId());
+            CompletableFuture<OwnerGroup> ownerGroupCompletableFuture = directoryService.getOwnerGroupsById(ownerGroupId);
             ownerGroup = ownerGroupCompletableFuture.get(1, TimeUnit.SECONDS);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        return new WorkspaceResponse(workspace.getWorkspaceId(), workspace.getWorkspaceName(),
-                workspace.getEnvironments(), workspace.getSourceRepositories(), ownerGroup);
+        return ownerGroup;
+    }
+
+    @Override
+    public List<WorkspaceResponse> getAllWorkSpaceAndOwnerGroup() throws ResourceNotExistsException {
+        List<Workspace> workspaces = getAll();
+        List<WorkspaceResponse> workspaceResponses = new ArrayList<>();
+        for (Workspace workspace: workspaces){
+            OwnerGroup ownerGroup = getOwnerGroup(workspace.getOwnerGroupId());
+            WorkspaceResponse workspaceResponse = new WorkspaceResponse(workspace.getWorkspaceId(), workspace.getWorkspaceName(),
+                    workspace.getEnvironments(), workspace.getSourceRepositories(), ownerGroup);
+            workspaceResponses.add(workspaceResponse);
+        }
+        return workspaceResponses;
     }
 
     @Override
