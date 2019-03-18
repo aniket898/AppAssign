@@ -3,6 +3,7 @@ package com.aniket.homework.componentservice.model;
 import com.aniket.homework.componentservice.service.IChildLinkable;
 import com.aniket.homework.componentservice.service.IParentLinkable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Environment", catalog = "component_schema")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Environment extends Component implements Serializable, IChildLinkable<Component>, IParentLinkable<Component> {
 
     private static final long serialVersionUID = 1L;

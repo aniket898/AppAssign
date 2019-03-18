@@ -1,24 +1,27 @@
 package com.aniket.homework.componentservice.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 import java.util.List;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class OwnerGroup implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private int ownerGroupId;
+    private String ownerGroupId;
     private List<Owner> owners;
 
-    public OwnerGroup(int ownerGroupId, List<Owner> owners) {
+    public OwnerGroup(String ownerGroupId, List<Owner> owners) {
         this.ownerGroupId = ownerGroupId;
         this.owners = owners;
     }
 
-    public int getOwnerGroupId() {
+    public String getOwnerGroupId() {
         return ownerGroupId;
     }
 
-    public void setOwnerGroupId(int ownerGroupId) {
+    public void setOwnerGroupId(String ownerGroupId) {
         this.ownerGroupId = ownerGroupId;
     }
 
@@ -37,13 +40,13 @@ public class OwnerGroup implements Serializable {
 
         OwnerGroup that = (OwnerGroup) o;
 
-        if (ownerGroupId != that.ownerGroupId) return false;
+        if (ownerGroupId != null ? !ownerGroupId.equals(that.ownerGroupId) : that.ownerGroupId != null) return false;
         return owners != null ? owners.equals(that.owners) : that.owners == null;
     }
 
     @Override
     public int hashCode() {
-        int result = ownerGroupId;
+        int result = ownerGroupId != null ? ownerGroupId.hashCode() : 0;
         result = 31 * result + (owners != null ? owners.hashCode() : 0);
         return result;
     }
@@ -51,7 +54,7 @@ public class OwnerGroup implements Serializable {
     @Override
     public String toString() {
         return "OwnerGroup{" +
-                "ownerGroupId=" + ownerGroupId +
+                "ownerGroupId='" + ownerGroupId + '\'' +
                 ", owners=" + owners +
                 '}';
     }

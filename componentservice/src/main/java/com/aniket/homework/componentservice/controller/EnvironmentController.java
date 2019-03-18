@@ -73,6 +73,42 @@ public class EnvironmentController {
         return environments;
     }
 
+    @RequestMapping(value="/{version:[v|V][0-9]+}/environments",
+            method= RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody void createEnvironment(
+            @PathVariable(VERSION) String version,
+            @RequestBody Environment environment) {
+        switch(Version.fromValue(version)){
+
+            case V1:
+                environmentService.create(environment);
+                break;
+
+            default:
+                logger.error("Invalid version number");
+                throw new ResourceNotExistsException("Invalid version number");
+        }
+    }
+
+    @RequestMapping(value="/{version:[v|V][0-9]+}/environments/{environmentId}",
+            method= RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public @ResponseBody void deleteEnvironment(
+            @PathVariable(VERSION) String version,
+            @PathVariable(ENVIRONMENT_ID) int environmentId) {
+        switch(Version.fromValue(version)){
+
+            case V1:
+                environmentService.remove(environmentId);
+                break;
+
+            default:
+                logger.error("Invalid version number");
+                throw new ResourceNotExistsException("Invalid version number");
+        }
+    }
+
     @RequestMapping(value="/{version:[v|V][0-9]+}/environments/{environmentId}/link/workspaces/{workspaceId}",
             method= RequestMethod.PUT)
     @ResponseStatus(HttpStatus.CREATED)

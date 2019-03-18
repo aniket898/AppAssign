@@ -5,6 +5,7 @@ import com.aniket.homework.componentservice.exception.ParentAlreadyExistsExcepti
 import com.aniket.homework.componentservice.exception.ResourceNotExistsException;
 import com.aniket.homework.componentservice.model.ErrorResponse;
 import com.aniket.homework.componentservice.model.Workspace;
+import com.aniket.homework.componentservice.model.WorkspaceResponse;
 import com.aniket.homework.componentservice.service.WorkspaceService;
 import com.aniket.homework.componentservice.util.Version;
 import org.slf4j.Logger;
@@ -30,15 +31,15 @@ public class WorkspaceController {
     @RequestMapping(value="/{version:[v|V][0-9]+}/workspaces/{workspaceId}",
             method= RequestMethod.GET)
     public @ResponseBody
-    Workspace getWorkspace(
+    WorkspaceResponse getWorkspace(
             @PathVariable(VERSION) String version,
             @PathVariable(WORKSPACE_ID) int workspaceId) {
 
-        Workspace workspace;
+        WorkspaceResponse workspace;
         switch(Version.fromValue(version)){
 
             case V1:
-                workspace = workspaceService.get(workspaceId);
+                workspace = workspaceService.getWorkSpaceAndOwnerGroup(workspaceId);
                 break;
 
             default:

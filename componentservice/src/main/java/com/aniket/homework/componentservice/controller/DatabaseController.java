@@ -76,6 +76,41 @@ public class DatabaseController {
         return databases;
     }
 
+    @RequestMapping(value="/{version:[v|V][0-9]+}/databases",
+            method= RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody void createDatabase(
+            @PathVariable(VERSION) String version,
+            @RequestBody Database database) {
+        switch(Version.fromValue(version)){
+
+            case V1:
+                databaseService.create(database);
+                break;
+
+            default:
+                logger.error("Invalid version number");
+                throw new ResourceNotExistsException("Invalid version number");
+        }
+    }
+
+    @RequestMapping(value="/{version:[v|V][0-9]+}/databases/{databaseId}",
+            method= RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public @ResponseBody void deleteDatabase(
+            @PathVariable(VERSION) String version,
+            @PathVariable(DATABASE_ID) int databaseId) {
+        switch(Version.fromValue(version)){
+
+            case V1:
+                databaseService.remove(databaseId);
+                break;
+
+            default:
+                logger.error("Invalid version number");
+                throw new ResourceNotExistsException("Invalid version number");
+        }
+    }
 
     @RequestMapping(value="/{version:[v|V][0-9]+}/databases/{databaseId}/link/environments/{environmentId}",
             method= RequestMethod.PUT)

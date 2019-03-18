@@ -76,6 +76,43 @@ public class SourceRepositoryController {
         return sourceRepositories;
     }
 
+    @RequestMapping(value="/{version:[v|V][0-9]+}/sourcerepositories",
+            method= RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    public @ResponseBody void createSourceRepository(
+            @PathVariable(VERSION) String version,
+            @RequestBody SourceRepository sourceRepository) {
+        switch(Version.fromValue(version)){
+
+            case V1:
+                sourceRepositoryService.create(sourceRepository);
+                break;
+
+            default:
+                logger.error("Invalid version number");
+                throw new ResourceNotExistsException("Invalid version number");
+        }
+    }
+
+    @RequestMapping(value="/{version:[v|V][0-9]+}/sourcerepositories/{sourcerepositoryId}",
+            method= RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public @ResponseBody void deleteSourceRepository(
+            @PathVariable(VERSION) String version,
+            @PathVariable(SOURCE_REPOSITORY_ID) int sourcerepositoryId) {
+        switch(Version.fromValue(version)){
+
+            case V1:
+                sourceRepositoryService.remove(sourcerepositoryId);
+                break;
+
+            default:
+                logger.error("Invalid version number");
+                throw new ResourceNotExistsException("Invalid version number");
+        }
+    }
+
+
     @RequestMapping(value="/{version:[v|V][0-9]+}/sourcerepositories/{sourceRepositoryId}/unlink/workspaces",
             method= RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)

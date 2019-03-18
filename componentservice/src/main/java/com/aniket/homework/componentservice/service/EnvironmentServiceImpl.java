@@ -8,6 +8,8 @@ import com.aniket.homework.componentservice.exception.ResourceNotExistsException
 import com.aniket.homework.componentservice.model.Database;
 import com.aniket.homework.componentservice.model.Environment;
 import com.aniket.homework.componentservice.model.Workspace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +19,7 @@ import java.util.List;
 @Service
 public class EnvironmentServiceImpl implements EnvironmentService {
 
+    private static final Logger logger = LoggerFactory.getLogger(EnvironmentServiceImpl.class);
 
     @Autowired
     private WorkspaceRepository workspaceRepository;
@@ -76,7 +79,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
     }
 
     @Override
-    public Environment get(Integer id) {
+    public Environment get(Integer id) throws ResourceNotExistsException {
         return environmentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotExistsException(
                         "Did not find environment with environmentId=" + id));
@@ -88,7 +91,7 @@ public class EnvironmentServiceImpl implements EnvironmentService {
     }
 
     @Override
-    public void remove(Integer id) {
+    public void remove(Integer id) throws ResourceNotExistsException {
         environmentRepository.deleteById(id);
     }
 

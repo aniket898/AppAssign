@@ -1,6 +1,7 @@
 package com.aniket.homework.componentservice.model;
 
 import com.aniket.homework.componentservice.service.IChildLinkable;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Workspace", catalog = "component_schema")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Workspace extends Component implements Serializable, IChildLinkable<Component> {
 
     private static final long serialVersionUID = 1L;

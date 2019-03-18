@@ -1,5 +1,8 @@
 package com.aniket.homework.componentservice.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ErrorResponse {
     public String errorMessage;
 

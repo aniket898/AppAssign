@@ -2,12 +2,14 @@ package com.aniket.homework.componentservice.model;
 
 import com.aniket.homework.componentservice.service.IParentLinkable;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
 @Table(name = "Database", catalog = "component_schema")
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Database extends Component implements Serializable, IParentLinkable<Component> {
 
     private static final long serialVersionUID = 1L;

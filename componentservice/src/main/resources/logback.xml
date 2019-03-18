@@ -21,6 +21,6 @@
 </root>
 
 
-<logger name="com.coupons.nextgen.geolocation" level="INFO"/>
+<logger name="com.aniket.homework.componentservice" level="INFO"/>
 
 </configuration>

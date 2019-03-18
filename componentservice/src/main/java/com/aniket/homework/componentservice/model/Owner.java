@@ -1,7 +1,10 @@
 package com.aniket.homework.componentservice.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Owner implements Serializable {
     private static final long serialVersionUID = 1L;
 

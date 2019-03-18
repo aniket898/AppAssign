@@ -5,6 +5,8 @@ import com.aniket.homework.componentservice.dao.WorkspaceRepository;
 import com.aniket.homework.componentservice.exception.ResourceNotExistsException;
 import com.aniket.homework.componentservice.model.SourceRepository;
 import com.aniket.homework.componentservice.model.Workspace;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @Service
 public class SourceRepositoryServiceImpl implements SourceRepositoryService {
+    private static final Logger logger = LoggerFactory.getLogger(SourceRepositoryServiceImpl.class);
 
     @Autowired
     private WorkspaceRepository workspaceRepository;
@@ -39,7 +42,7 @@ public class SourceRepositoryServiceImpl implements SourceRepositoryService {
     }
 
     @Override
-    public SourceRepository get(Integer id) {
+    public SourceRepository get(Integer id) throws ResourceNotExistsException {
         return sourceRepoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotExistsException(
                         "Did not find source repository with sourceRepositoryId=" + id));
@@ -51,7 +54,7 @@ public class SourceRepositoryServiceImpl implements SourceRepositoryService {
     }
 
     @Override
-    public void remove(Integer id) {
+    public void remove(Integer id) throws ResourceNotExistsException {
         sourceRepoRepository.deleteById(id);
     }
 

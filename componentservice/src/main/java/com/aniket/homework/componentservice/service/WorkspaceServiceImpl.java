@@ -5,17 +5,21 @@ import com.aniket.homework.componentservice.dao.SourceRepoRepository;
 import com.aniket.homework.componentservice.dao.WorkspaceRepository;
 import com.aniket.homework.componentservice.exception.ParentAlreadyExistsException;
 import com.aniket.homework.componentservice.exception.ResourceNotExistsException;
-import com.aniket.homework.componentservice.model.Environment;
-import com.aniket.homework.componentservice.model.SourceRepository;
-import com.aniket.homework.componentservice.model.Workspace;
+import com.aniket.homework.componentservice.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class WorkspaceServiceImpl implements WorkspaceService {
+
+    private static final Logger logger = LoggerFactory.getLogger(WorkspaceServiceImpl.class);
 
     @Autowired
     private WorkspaceRepository workspaceRepository;
@@ -91,7 +95,21 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public Workspace get(Integer id) {
+    public WorkspaceResponse getWorkSpaceAndOwnerGroup(Integer workspaceId) throws ResourceNotExistsException {
+        Workspace workspace = get(workspaceId);
+        OwnerGroup ownerGroup = null;
+        try {
+            CompletableFuture<OwnerGroup> ownerGroupCompletableFuture = directoryService.getOwnerGroupsById(workspace.getOwnerGroupId());
+            ownerGroup = ownerGroupCompletableFuture.get(1, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
+        return new WorkspaceResponse(workspace.getWorkspaceId(), workspace.getWorkspaceName(),
+                workspace.getEnvironments(), workspace.getSourceRepositories(), ownerGroup);
+    }
+
+    @Override
+    public Workspace get(Integer id) throws ResourceNotExistsException {
         return workspaceRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotExistsException(
                         "Did not find workspace with workspaceId=" + id));
@@ -104,7 +122,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     }
 
     @Override
-    public void remove(Integer id) {
+    public void remove(Integer id) throws ResourceNotExistsException {
         workspaceRepository.deleteById(id);
     }
 
