@@ -68,3 +68,12 @@ Postman-Token: 894e5558-3d51-fd5d-e360-35e273d97262
 ```
 
 Now you can use any API's to link and unlink parent and child components as specified in APIInformation.pdf
+
+## Future Work
+
+Microservice Architecture:
+1. Use Eureka as discovery server
+2. Use Spring cloud config server to store common configs like DB properties and ports
+3. Use Load balancers in front of multiple instances of our component service
+4. Use Zuul is for enabling dynamic routing, monitoring, resiliency.
+5. Use master slave architecture for our DB instances. Masters should support write queries whereas slaves should support our read queries.
